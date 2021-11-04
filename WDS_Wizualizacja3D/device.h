@@ -91,14 +91,8 @@ signals:
      * \param[in] QVector3D - surowe dane w postaci wektora3D.
      * \param[in] char - identyfikator czujnika.
      */
-    void sendGyroDatatoChart(const QVector3D&,char);
+    void sendEncoderDatatoChart(const QVector3D&,char);
 
-    /*!
-     * \brief Sygnał wysyła surowe dane z każdej osi akcelerometru do odpowiednich wykresów.
-     * \param[in] QVector3D - surowe dane w postaci wektora3D.
-     * \param[in] char - identyfikator czujnika.
-     */
-    void sendAccDatatoChart(const QVector3D&,char);
 
 private:
     int XgyroMAX; //!< maks przedziału pomijalnej wartości obliczonej z  kalibracji żyroskopu dla osi OX.

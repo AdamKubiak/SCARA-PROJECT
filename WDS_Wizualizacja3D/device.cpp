@@ -60,13 +60,13 @@ void Device::getData()
         int x = strSplited.at(1).toDouble();
         int y = strSplited.at(2).toDouble();
         int z = strSplited.at(3).toDouble();
-        qDebug() << line;
-        qDebug() << x << y << z;
+        //qDebug() << line;
+        //qDebug() << x << y << z;
         dataContainer->setID(id);
         dataContainer->setX(x);
         dataContainer->setY(y);
         dataContainer->setZ(z);
-        qDebug()<<dataContainer->getID()<<dataContainer->getX()<<dataContainer->getY()<<dataContainer->getZ();
+        //qDebug()<<dataContainer->getID()<<dataContainer->getX()<<dataContainer->getY()<<dataContainer->getZ();
          }
         }
         QString terminator = "\r";
@@ -74,6 +74,7 @@ void Device::getData()
         }
 
         emit newDeviceValues(dataContainer->getX(),dataContainer->getY());
+        emit sendEncoderDatatoChart(QVector3D(dataContainer->getX(),dataContainer->getY(),dataContainer->getZ()),dataContainer->getID());
 
         data.clear();
 }

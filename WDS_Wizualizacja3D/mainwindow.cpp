@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->J1sliderValue->setText(QString::number(0));
+    ui->J2sliderValue->setText(QString::number(0));
+    ui->J3sliderValue->setText(QString::number(0));
 
     objectWidget = ui->visualizationWidget;
     objectScene = objectWidget->renderScene();
@@ -47,9 +50,9 @@ void MainWindow::addConnections()
 
 
 
-    connect(objectScene, &Object_Scene::orientationChanged,this, &MainWindow::setRotationValue);
+    //connect(objectScene, &Object_Scene::orientationChanged,this, &MainWindow::setRotationValue);
 
-    connect(objectScene, &Object_Scene::positionChanged, this, &MainWindow::setTranslationValue);
+    //connect(objectScene, &Object_Scene::positionChanged, this, &MainWindow::setTranslationValue);
 
     connect(objectScene, &Object_Scene::orientationChanged, objectScene, &Object_Scene::setOrientation);
 
@@ -57,12 +60,16 @@ void MainWindow::addConnections()
     connect(device,&Device::orientationChanged,objectScene,&Object_Scene::setOrientation);
     connect(device,&Device::positionChanged,objectScene,&Object_Scene::setPosition);
 
-    connect(device,&Device::sendGyroDatatoChart,this,&MainWindow::setChartsValue);
-    connect(device,&Device::sendAccDatatoChart,this,&MainWindow::setChartsValue);
+    connect(device,&Device::sendEncoderDatatoChart,this,&MainWindow::setChartsValue);
+    //connect(device,&Device::sendAccDatatoChart,this,&MainWindow::setChartsValue);
 
     connect(device, &Device::sendingMessage,device, &Device::sendMessageToDevice);
 
     connect(ui->horizontalSlider, &QAbstractSlider::valueChanged,this,&MainWindow::sliderToData);
+    connect(ui->horizontalSlider_2, &QAbstractSlider::valueChanged,this,&MainWindow::sliderToData);
+    connect(ui->horizontalSlider_3, &QAbstractSlider::valueChanged,this,&MainWindow::sliderToData);
+    connect(this,&MainWindow::infoSliderChanged,this, &MainWindow::setSlidersInfo);
+
 
     connect(ui->actionZa_aduj_model, &QAction::triggered,[=]()
     {
@@ -150,13 +157,11 @@ void MainWindow::setZTranslationValue(float value)
 }
 
 
-void MainWindow::setRotationValue(const QQuaternion &value)
+void MainWindow::setRotationValue(float x , float y)
 {
-    QVector3D eulerAngles = value.toEulerAngles();
-
-        setXRotationValue(eulerAngles.x());
-        setYRotationValue(eulerAngles.y());
-        setZRotationValue(eulerAngles.z());
+        setXRotationValue(x);
+        setYRotationValue(y);
+        setZRotationValue(0);
 }
 
 void MainWindow::setTranslationValue(const QVector3D &value)
@@ -180,21 +185,21 @@ void MainWindow::makePlot()
     //gyro graphs
    QCPGraph *graph1 = ui->plotXAxis->addGraph();
    QCPGraph *graph2 = ui->plotYAxis->addGraph();
-   QCPGraph *graph3 = ui->plotZAxis->addGraph();
+   //QCPGraph *graph3 = ui->plotZAxis->addGraph();
 
    //acc graphs
    QCPGraph *graph4 = ui->plotXAxis->addGraph();
    QCPGraph *graph5 = ui->plotYAxis->addGraph();
-   QCPGraph *graph6 = ui->plotZAxis->addGraph();
+   //QCPGraph *graph6 = ui->plotZAxis->addGraph();
 
    //graph1->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, QPen(Qt::black, 1.5), QBrush(Qt::white), 9));
    graph1->setPen(QPen(QColor(10, 140, 70, 160), 2));
    graph2->setPen(QPen(QColor(10, 140, 70, 160), 2));
-   graph3->setPen(QPen(QColor(10, 140, 70, 160), 2));
+   //graph3->setPen(QPen(QColor(10, 140, 70, 160), 2));
 
    graph4->setPen(QPen(QColor(220,20,60), 2));
    graph5->setPen(QPen(QColor(220,20,60), 2));
-   graph6->setPen(QPen(QColor(220,20,60), 2));
+   //graph6->setPen(QPen(QColor(220,20,60), 2));
 
    // set some pens, brushes and backgrounds:
    ui->plotXAxis->xAxis->setBasePen(QPen(Qt::white, 1));
@@ -253,7 +258,7 @@ void MainWindow::makePlot()
    ui->plotYAxis->xAxis->setLabelColor(Qt::white);
    ui->plotYAxis->yAxis->setLabelColor(Qt::white);
 
-   ui->plotZAxis->xAxis->setBasePen(QPen(Qt::white, 1));
+  /* ui->plotZAxis->xAxis->setBasePen(QPen(Qt::white, 1));
    ui->plotZAxis->yAxis->setBasePen(QPen(Qt::white, 1));
    ui->plotZAxis->xAxis->setTickPen(QPen(Qt::white, 1));
    ui->plotZAxis->yAxis->setTickPen(QPen(Qt::white, 1));
@@ -274,7 +279,7 @@ void MainWindow::makePlot()
    ui->plotZAxis->setBackground(plotGradient);
    ui->plotZAxis->axisRect()->setBackground(axisRectGradient);
    ui->plotZAxis->xAxis->setLabelColor(Qt::white);
-   ui->plotZAxis->yAxis->setLabelColor(Qt::white);
+   ui->plotZAxis->yAxis->setLabelColor(Qt::white);*/
 
 
 
@@ -285,7 +290,7 @@ void MainWindow::makePlot()
 
     // give the axes some labels:
     ui->plotXAxis->xAxis->setLabel("Czas");
-    ui->plotXAxis->yAxis->setLabel("Dane z urządzenia");
+    ui->plotXAxis->yAxis->setLabel("Pozycja enkodera");
     // set axes ranges, so we see all data:
 
 
@@ -295,17 +300,17 @@ void MainWindow::makePlot()
 
     // give the axes some labels:
     ui->plotYAxis->xAxis->setLabel("Czas");
-    ui->plotYAxis->yAxis->setLabel("Dane z urządzenia");
+    ui->plotYAxis->yAxis->setLabel("Pozycja enkodera");
 
 
     //ui->plotZAxis->addGraph();
 
     // give the axes some labels:
-    ui->plotZAxis->xAxis->setLabel("Czas");
-    ui->plotZAxis->yAxis->setLabel("Dane z urządzenia");
-    ui->plotXAxis->yAxis->setRange(-20000,20000);
-    ui->plotYAxis->yAxis->setRange(-20000,20000);
-    ui->plotZAxis->yAxis->setRange(-20000,20000);
+    //ui->plotZAxis->xAxis->setLabel("Czas");
+    //ui->plotZAxis->yAxis->setLabel("Pozycja enkodera");
+    ui->plotXAxis->yAxis->setRange(-320,3600);
+    ui->plotYAxis->yAxis->setRange(-4000,4000);
+    //ui->plotZAxis->yAxis->setRange(-20000,20000);
 
 
 }
@@ -321,19 +326,13 @@ void MainWindow::setChartsValue(const QVector3D &Axis, char ID)
     static QTime prev = QTime::currentTime();
     dt = (float)prev.msecsTo(QTime::currentTime())/1000.0;
 
-    if(ID=='G')
+    if(ID=='E')
     {
-        Xgyro_y.append(Axis.x());
-        Ygyro_y.append(Axis.y());
-        Zgyro_y.append(Axis.z());
+        Xgyro_y.append(Axis.x()-32768);
+        Ygyro_y.append(Axis.y()-32768);
+        //Zgyro_y.append(Axis.z()-32768);
     }
 
-    if(ID=='A')
-    {
-        Xacc_y.append(Axis.x());
-        Yacc_y.append(Axis.y());
-        Zacc_y.append(Axis.z());
-    }
 
     dtTime.append(dt);
 
@@ -343,14 +342,14 @@ void MainWindow::setChartsValue(const QVector3D &Axis, char ID)
     ui->plotYAxis->xAxis->setRange(dt-1,dt+0.09);
 
 
-    ui->plotZAxis->xAxis->setRange(dt-1,dt+0.09);
+    //ui->plotZAxis->xAxis->setRange(dt-1,dt+0.09);
 
 
 
     //while(dtTime.size()> 200)
       //      dtTime.erase(dtTime.begin());
 
-    if(ID=='G')
+    if(ID=='E')
     {
         while(dtTime.size()> 200)
                 dtTime.erase(dtTime.begin());
@@ -361,25 +360,8 @@ void MainWindow::setChartsValue(const QVector3D &Axis, char ID)
         while(Ygyro_y.size()> 200)
             Ygyro_y.erase(Ygyro_y.begin());
 
-        while(Zgyro_y.size()> 200)
-            Zgyro_y.erase(Zgyro_y.begin());
-
-
-    }
-
-    if(ID=='A')
-    {
-        while(dtTime.size()> 200)
-                dtTime.erase(dtTime.begin());
-
-        while(Xacc_y.size()> 200)
-            Xacc_y.erase(Xacc_y.begin());
-
-        while(Yacc_y.size()> 200)
-            Yacc_y.erase(Yacc_y.begin());
-
-        while(Zacc_y.size()> 200)
-            Zacc_y.erase(Zacc_y.begin());
+        //while(Zgyro_y.size()> 200)
+          //  Zgyro_y.erase(Zgyro_y.begin());
 
 
     }
@@ -390,12 +372,11 @@ void MainWindow::setChartsValue(const QVector3D &Axis, char ID)
         return;
     }
 
-   /* if(ui->checkBox_2->isChecked())
-    {
+
     ui->plotXAxis->graph(0)->setData(dtTime, Xgyro_y);
     ui->plotYAxis->graph(0)->setData(dtTime, Ygyro_y);
-    ui->plotZAxis->graph(0)->setData(dtTime, Zgyro_y);
-    }
+    //ui->plotZAxis->graph(0)->setData(dtTime, Zgyro_y);
+    /*
     if(ui->checkBox->isChecked())
     {
     ui->plotXAxis->graph(1)->setData(dtTime, Xacc_y);
@@ -408,18 +389,32 @@ void MainWindow::setChartsValue(const QVector3D &Axis, char ID)
 
         ui->plotXAxis->replot();
         ui->plotYAxis->replot();
-        ui->plotZAxis->replot();
+        //ui->plotZAxis->replot();
 
         ui->plotXAxis->update();
         ui->plotYAxis->update();
-        ui->plotZAxis->update();
+        //ui->plotZAxis->update();
         i=0;
 
 }
 
 void MainWindow::sliderToData(int value)
 {
- sliders_Data.setX(value);
+  int x = ui->horizontalSlider->value();
+  sliders_Data.setX(x);
+  int y = ui->horizontalSlider_2->value();
+  sliders_Data.setY(y);
+  int z = ui->horizontalSlider_3->value();
+  sliders_Data.setZ(z);
+
+  emit infoSliderChanged();
+}
+
+void MainWindow::setSlidersInfo()
+{
+    ui->J1sliderValue->setText(QString::number(sliders_Data.getX()));
+    ui->J2sliderValue->setText(QString::number(sliders_Data.getY()));
+    ui->J3sliderValue->setText(QString::number(sliders_Data.getZ()));
 }
 
 
@@ -427,9 +422,13 @@ void MainWindow::on_resetViewButton_clicked()
 {
     objectScene->setOrientation(QQuaternion(QVector4D(QVector3D(0,0,0),0)));
     objectScene->setPosition(QVector3D(0,0,0));
-    device->resetDeviceValues();
+    //device->resetDeviceValues();
     std::stringstream msg;
-    msg <<"I "<<sliders_Data.getX() << " 4.41 5.45 55R";
+
+    robot->fromSlidersToPosition(sliders_Data.getX(),sliders_Data.getY(),sliders_Data.getZ());
+
+    msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";//msg <<"I "<<sliders_Data.getX() << " 4.41 5.45 55R";
+    qDebug() << QString::fromStdString(msg.str());
     emit device->sendingMessage(QString::fromStdString(msg.str()));
 }
 void MainWindow::on_motor1L_pressed()
@@ -494,8 +493,9 @@ void MainWindow::on_pushButton_5_clicked()
 {
     std::stringstream msg;
     msg <<"E 0 0 55R";
-    robot = new Robot(32768.0,32768.0,0.0,0.0);
+    robot = new Robot(0,0,0.0,0.0);
     connect(device,&Device::newDeviceValues,robot,&Robot::encToDegree);
-    //connect(robot, &Robot::encoderPositionChanged, )
+    connect(robot, &Robot::encoderPositionChanged,this,&MainWindow::setRotationValue);
+    connect(robot,&Robot::robotPositionChanged,this,&MainWindow::setTranslationValue);
     emit device->sendingMessage(QString::fromStdString(msg.str()));
 }

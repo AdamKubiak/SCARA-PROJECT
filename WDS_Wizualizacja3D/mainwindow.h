@@ -78,7 +78,7 @@ public slots:
      *  dla każdej z osi i następuje przekazanie tych wartości do GUI.
      *  \param[in] value - wartość rotacji obiektu w quaternionach.
      */
-    void setRotationValue(const QQuaternion &value);
+    void setRotationValue(float x , float y);
 
     /*!
      * \brief Slot przyjmuje strukture QVector3D, który zostaje rozbity na wartości translacji
@@ -107,6 +107,8 @@ public slots:
 
     void sliderToData(int value);
 
+    void setSlidersInfo();
+
 
 private slots:
     /*!
@@ -132,6 +134,9 @@ private slots:
     void on_motor2R_pressed();
 
     void on_pushButton_5_clicked();
+
+signals:
+    void infoSliderChanged();
 
 private:
     Ui::MainWindow *ui;

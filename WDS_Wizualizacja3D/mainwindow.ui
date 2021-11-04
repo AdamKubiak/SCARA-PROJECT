@@ -17,87 +17,46 @@
    <layout class="QGridLayout" name="gridLayout_7" columnstretch="1,2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout_6">
-      <item row="4" column="0">
-       <layout class="QGridLayout" name="gridLayout_4">
+      <item row="7" column="0">
+       <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
-         <widget class="QCustomPlot" name="plotYAxis" native="true"/>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0">
-       <layout class="QGridLayout" name="gridLayout_3" rowstretch="0,0,0,0,0" columnstretch="0,0,0">
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <item row="4" column="2">
-         <widget class="QPushButton" name="resetViewButton">
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Wykonaj ruch o zadane kąty</string>
-          </property>
-          <property name="shortcut">
-           <string>R</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QSlider" name="horizontalSlider">
-          <property name="minimum">
-           <number>-10</number>
-          </property>
-          <property name="maximum">
-           <number>190</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QSlider" name="horizontalSlider_2">
-          <property name="minimum">
-           <number>-40</number>
-          </property>
-          <property name="maximum">
-           <number>220</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QSlider" name="horizontalSlider_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="label_5">
-          <property name="font">
-           <font>
-            <pointsize>11</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>[deg]</string>
-          </property>
-         </widget>
+         <layout class="QGridLayout" name="gridLayout_10">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="motor1L">
+            <property name="text">
+             <string>Motor1 Left</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="motor1R">
+            <property name="text">
+             <string>Motor1 Right</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="motor2L">
+            <property name="text">
+             <string>Motor2 Left</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="motor2R">
+            <property name="text">
+             <string>Motor2 Right</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="pushButton_5">
+            <property name="text">
+             <string>Przypisz Pozycję Startową</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -360,7 +319,7 @@
            <number>1</number>
           </property>
           <property name="text">
-           <string>Pozycja efektora</string>
+           <string>Pozycja efektora[cm]</string>
           </property>
           <property name="textFormat">
            <enum>Qt::PlainText</enum>
@@ -444,88 +403,241 @@
            <string>Z:</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="6" column="0">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QCustomPlot" name="plotYAxis" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
+       <layout class="QGridLayout" name="gridLayout_3" rowstretch="0,0,0,0,0" columnstretch="0,0,0">
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="J3sliderValue">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>dane</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QPushButton" name="resetViewButton">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Wykonaj ruch o zadane kąty</string>
+          </property>
+          <property name="shortcut">
+           <string>R</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="J2sliderValue">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>dane</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QSlider" name="horizontalSlider_2">
+          <property name="minimum">
+           <number>-130</number>
+          </property>
+          <property name="maximum">
+           <number>130</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QSlider" name="horizontalSlider">
+          <property name="minimum">
+           <number>-10</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_5">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>[deg]</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="J1sliderValue">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>dane</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QSlider" name="horizontalSlider_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item row="3" column="0">
-       <layout class="QGridLayout" name="gridLayout_5" rowstretch="0">
-        <item row="0" column="0">
-         <widget class="QCustomPlot" name="plotXAxis" native="true"/>
-        </item>
-       </layout>
+       <widget class="QWidget" name="widget" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="minimumSize">
+              <size>
+               <width>88</width>
+               <height>21</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Współrzędna osi X[cm]</string>
+             </property>
+             <property name="scaledContents">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <widget class="QPushButton" name="positionSetButton">
+             <property name="text">
+              <string>Wykonaj ruch do zadanej pozycji</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Współrzędna osi Y[cm]</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_8">
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Współrzędna osi Z[cm]</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item row="5" column="0">
-       <layout class="QGridLayout" name="gridLayout_2">
+       <layout class="QGridLayout" name="gridLayout_5" rowstretch="0" columnstretch="0">
         <item row="0" column="0">
-         <widget class="QCustomPlot" name="plotZAxis" native="true">
-          <widget class="QPushButton" name="motor1L">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>10</y>
-             <width>80</width>
-             <height>21</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Motor1 Left</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="motor1R">
-           <property name="geometry">
-            <rect>
-             <x>290</x>
-             <y>10</y>
-             <width>80</width>
-             <height>21</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Motor1 Right</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="motor2L">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>40</y>
-             <width>80</width>
-             <height>21</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Motor2 Left</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="motor2R">
-           <property name="geometry">
-            <rect>
-             <x>290</x>
-             <y>40</y>
-             <width>80</width>
-             <height>21</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Motor2 Right</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="geometry">
-            <rect>
-             <x>90</x>
-             <y>70</y>
-             <width>201</width>
-             <height>21</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Przypisz Pozycję Startową</string>
-           </property>
-          </widget>
+         <widget class="QCustomPlot" name="plotXAxis" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
          </widget>
         </item>
        </layout>
@@ -568,8 +680,18 @@
     <addaction name="menuWybierz_port"/>
     <addaction name="actionZnajd_port"/>
    </widget>
+   <widget class="QMenu" name="menuSekwencja">
+    <property name="title">
+     <string>Sekwencja</string>
+    </property>
+    <addaction name="actionDodaj_pozycj"/>
+    <addaction name="actionWyczy_sekwencj"/>
+    <addaction name="actionStart_2"/>
+    <addaction name="actionStop_2"/>
+   </widget>
    <addaction name="menuPlik"/>
    <addaction name="menuKomunikacja"/>
+   <addaction name="menuSekwencja"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionUsu_model">
@@ -605,6 +727,26 @@
   <action name="actionZnajd_port">
    <property name="text">
     <string>Znajdź port</string>
+   </property>
+  </action>
+  <action name="actionDodaj_pozycj">
+   <property name="text">
+    <string>Dodaj pozycję</string>
+   </property>
+  </action>
+  <action name="actionWyczy_sekwencj">
+   <property name="text">
+    <string>Wyczyść sekwencję</string>
+   </property>
+  </action>
+  <action name="actionStart_2">
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </action>
+  <action name="actionStop_2">
+   <property name="text">
+    <string>Stop</string>
    </property>
   </action>
  </widget>
