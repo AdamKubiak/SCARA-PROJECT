@@ -6,6 +6,13 @@
 #include <QVector3D>
 #define ENC_ZERO 32768
 #define M_PI 3.14159265358979323846
+#define J1_MIN -10.0
+#define J1_MAX 190.0
+#define J2_MIN -130.0
+#define J2_MAX 130.0
+#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+
+
 
 
 class Robot : public QObject
@@ -27,7 +34,10 @@ public:
     float setpoint_Z_position;
 
     void forwardKinematics(float J1, float J2);
+    void inverseKinematics(double X, double Y, double Z);
     void fromSlidersToPosition(float slider1_Value, float slider2_Value, float slider3_Value);
+    void fromSpinboxToPosition(double spinbox1_Value, double spinbox2_Value, double spinbox3_Value);
+    std::pair<float,float> constraintJ2(float J1);
 
 
 signals:

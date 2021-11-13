@@ -6,6 +6,7 @@
 #include "object_widget.h"
 #include "device.h"
 #include "robot.h"
+#include "sequencehandler.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -106,6 +107,7 @@ public slots:
     //void setChartsValueAccelerometer(const QVector3D &Axis, char ID);
 
     void sliderToData(int value);
+    void spinboxToData(double value);
 
     void setSlidersInfo();
 
@@ -135,6 +137,8 @@ private slots:
 
     void on_pushButton_5_clicked();
 
+    void on_positionSetButton_clicked();
+
 signals:
     void infoSliderChanged();
 
@@ -144,7 +148,9 @@ private:
     Object_Widget *objectWidget;//!< Wskaźnik na widget sceny.
     Device *device; //<! Wskaźnik na urządzenie z którego są zbierane dane.
     DataContainer sliders_Data;
+    QVector3D spinbox_Data;
     Robot *robot;
+    SequenceHandler seqHandler;
 
     QVector<double>    Xgyro_y,Ygyro_y,Zgyro_y, dtTime; //!< wektory z danymi z żyroskopu do wyświetlenia na wykresach.
     QVector<double>    Xacc_y,Yacc_y,Zacc_y; //!< wektory z danymi z akcelerometru do wyświetlenia na wykresach.

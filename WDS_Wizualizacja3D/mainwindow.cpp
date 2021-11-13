@@ -68,6 +68,11 @@ void MainWindow::addConnections()
     connect(ui->horizontalSlider, &QAbstractSlider::valueChanged,this,&MainWindow::sliderToData);
     connect(ui->horizontalSlider_2, &QAbstractSlider::valueChanged,this,&MainWindow::sliderToData);
     connect(ui->horizontalSlider_3, &QAbstractSlider::valueChanged,this,&MainWindow::sliderToData);
+
+    connect(ui->X_SpinBox,QOverload<double>::of(&QDoubleSpinBox::valueChanged),this,&MainWindow::spinboxToData);
+    connect(ui->Y_SpinBox,QOverload<double>::of(&QDoubleSpinBox::valueChanged),this,&MainWindow::spinboxToData);
+    connect(ui->Z_SpinBox,QOverload<double>::of(&QDoubleSpinBox::valueChanged),this,&MainWindow::spinboxToData);
+
     connect(this,&MainWindow::infoSliderChanged,this, &MainWindow::setSlidersInfo);
 
 
@@ -110,6 +115,8 @@ void MainWindow::addConnections()
           return;
         }
     });
+
+
 
 
 }
@@ -341,32 +348,21 @@ void MainWindow::setChartsValue(const QVector3D &Axis, char ID)
 
     ui->plotYAxis->xAxis->setRange(dt-1,dt+0.09);
 
-
-    //ui->plotZAxis->xAxis->setRange(dt-1,dt+0.09);
-
-
-
-    //while(dtTime.size()> 200)
-      //      dtTime.erase(dtTime.begin());
-
     if(ID=='E')
     {
-        while(dtTime.size()> 200)
+        while(dtTime.size()> 2000)
                 dtTime.erase(dtTime.begin());
 
-        while(Xgyro_y.size()> 200)
+        while(Xgyro_y.size()> 2000)
             Xgyro_y.erase(Xgyro_y.begin());
 
-        while(Ygyro_y.size()> 200)
+        while(Ygyro_y.size()> 2000)
             Ygyro_y.erase(Ygyro_y.begin());
-
-        //while(Zgyro_y.size()> 200)
-          //  Zgyro_y.erase(Zgyro_y.begin());
 
 
     }
 
-    if(i<6)
+    if(i<30)
     {
         i++;
         return;
@@ -410,6 +406,18 @@ void MainWindow::sliderToData(int value)
   emit infoSliderChanged();
 }
 
+void MainWindow::spinboxToData(double value)
+{
+    //double x =
+    spinbox_Data.setX(ui->X_SpinBox->value());
+    spinbox_Data.setY(ui->Y_SpinBox->value());
+    spinbox_Data.setZ(ui->Z_SpinBox->value());
+
+
+
+
+}
+
 void MainWindow::setSlidersInfo()
 {
     ui->J1sliderValue->setText(QString::number(sliders_Data.getX()));
@@ -418,19 +426,7 @@ void MainWindow::setSlidersInfo()
 }
 
 
-void MainWindow::on_resetViewButton_clicked()
-{
-    objectScene->setOrientation(QQuaternion(QVector4D(QVector3D(0,0,0),0)));
-    objectScene->setPosition(QVector3D(0,0,0));
-    //device->resetDeviceValues();
-    std::stringstream msg;
 
-    robot->fromSlidersToPosition(sliders_Data.getX(),sliders_Data.getY(),sliders_Data.getZ());
-
-    msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";//msg <<"I "<<sliders_Data.getX() << " 4.41 5.45 55R";
-    qDebug() << QString::fromStdString(msg.str());
-    emit device->sendingMessage(QString::fromStdString(msg.str()));
-}
 void MainWindow::on_motor1L_pressed()
 {
     std::stringstream msg;
@@ -497,5 +493,74 @@ void MainWindow::on_pushButton_5_clicked()
     connect(device,&Device::newDeviceValues,robot,&Robot::encToDegree);
     connect(robot, &Robot::encoderPositionChanged,this,&MainWindow::setRotationValue);
     connect(robot,&Robot::robotPositionChanged,this,&MainWindow::setTranslationValue);
+
+    connect(ui->actionDodaj_pozycj, &QAction::triggered,[=]()
+    {
+        seqHandler.addSeqPosition(robot->J1_angle,robot->J2_angle,robot->J3_angle);
+        std::ostringstream oss;
+        oss << "Dodaną następującą liczbę pozycji: " << seqHandler.getSize();
+
+        QMessageBox::information(this,"Sekwencja", QString::fromStdString(oss.str()));
+
+    });
+
+    connect(ui->actionWyczy_sekwencj, &QAction::triggered,[=]()
+    {
+        seqHandler.clearSequence();
+
+        QMessageBox::information(this,"Sekwencja", "Sekwencja została usunięta");
+
+    });
+
+    connect(ui->actionStart_2, &QAction::triggered,[=]()
+    {
+        std::stringstream msg;
+        for(seqHandler.index = 0; seqHandler.index<seqHandler.getSize(); seqHandler.index++)
+        {
+            auto tuple =  seqHandler.getList()[seqHandler.index];
+            float X, Y, Z;
+            std::tie(X, Y, Z) = tuple;
+
+            robot->fromSlidersToPosition(X,Y,Z);
+
+
+            msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";
+            emit device->sendingMessage(QString::fromStdString(msg.str()));
+
+            seqHandler.delay();
+        }
+        seqHandler.index = seqHandler.getSize();
+
+    });
+    connect(ui->actionStop_2, &QAction::triggered,[=]()
+    {
+        seqHandler.index = seqHandler.getSize();
+    });
+
+    emit device->sendingMessage(QString::fromStdString(msg.str()));
+}
+
+void MainWindow::on_positionSetButton_clicked()
+{
+    std::stringstream msg;
+
+    robot->fromSpinboxToPosition(spinbox_Data.x(),spinbox_Data.y(),spinbox_Data.z());
+
+    msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";
+    qDebug() << QString::fromStdString(msg.str());
+    emit device->sendingMessage(QString::fromStdString(msg.str()));
+}
+
+void MainWindow::on_resetViewButton_clicked()
+{
+    objectScene->setOrientation(QQuaternion(QVector4D(QVector3D(0,0,0),0)));
+    objectScene->setPosition(QVector3D(0,0,0));
+    //device->resetDeviceValues();
+    std::stringstream msg;
+
+    robot->fromSlidersToPosition(sliders_Data.getX(),sliders_Data.getY(),sliders_Data.getZ());
+
+    msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";//msg <<"I "<<sliders_Data.getX() << " 4.41 5.45 55R";
+    qDebug() << QString::fromStdString(msg.str());
     emit device->sendingMessage(QString::fromStdString(msg.str()));
 }

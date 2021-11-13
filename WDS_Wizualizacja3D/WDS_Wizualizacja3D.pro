@@ -20,7 +20,8 @@ SOURCES += \
     object_widget.cpp \
     qcustomplot.cpp \
     render_object.cpp \
-    robot.cpp
+    robot.cpp \
+    sequencehandler.cpp
 
 HEADERS += \
     checksum.h \
@@ -32,7 +33,8 @@ HEADERS += \
     object_widget.h \
     qcustomplot.h \
     render_object.h \
-    robot.h
+    robot.h \
+    sequencehandler.h
 
 FORMS += \
     mainwindow.ui \

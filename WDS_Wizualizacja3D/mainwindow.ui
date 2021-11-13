@@ -505,7 +505,7 @@
            <number>-10</number>
           </property>
           <property name="maximum">
-           <number>200</number>
+           <number>190</number>
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -615,13 +615,13 @@
             </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+            <widget class="QDoubleSpinBox" name="Z_SpinBox"/>
            </item>
            <item row="1" column="0">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+            <widget class="QDoubleSpinBox" name="X_SpinBox"/>
            </item>
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+            <widget class="QDoubleSpinBox" name="Y_SpinBox"/>
            </item>
           </layout>
          </item>
