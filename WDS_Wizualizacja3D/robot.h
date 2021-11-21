@@ -33,19 +33,22 @@ public:
     float setpoint_Y_position;
     float setpoint_Z_position;
 
-    void forwardKinematics(float J1, float J2);
-    void inverseKinematics(double X, double Y, double Z);
+    void forwardKinematics(float J1, float J2,float J3);
+    void inverseKinematics(double X, double Y, double Z,bool mode);
     void fromSlidersToPosition(float slider1_Value, float slider2_Value, float slider3_Value);
-    void fromSpinboxToPosition(double spinbox1_Value, double spinbox2_Value, double spinbox3_Value);
+    void fromSpinboxToPosition(double spinbox1_Value, double spinbox2_Value, double spinbox3_Value,bool mode);
+    int fromAngleToPWMForward(float angle);
+    int fromAngleToPWMInverse(float position);
+    float fromAngleToPositionServo(float angle);
     std::pair<float,float> constraintJ2(float J1);
 
 
 signals:
-    void encoderPositionChanged(float sJ1, float sJ2);
+    void encoderPositionChanged(float sJ1, float sJ2,float sJ3);
     void robotPositionChanged(QVector3D position);
 
 public slots:
-    void encToDegree(int sJ1,int sJ2);
+    void encToDegree(int sJ1,int sJ2,int sJ3);
 
     //void degreeToPosition(float X,float Y,float Z);
 

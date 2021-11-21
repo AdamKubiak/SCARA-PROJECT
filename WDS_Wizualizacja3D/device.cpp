@@ -73,7 +73,7 @@ void Device::getData()
         int pos = line.lastIndexOf(terminator);
         }
 
-        emit newDeviceValues(dataContainer->getX(),dataContainer->getY());
+        emit newDeviceValues(dataContainer->getX(),dataContainer->getY(),dataContainer->getZ());
         emit sendEncoderDatatoChart(QVector3D(dataContainer->getX(),dataContainer->getY(),dataContainer->getZ()),dataContainer->getID());
 
         data.clear();

@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //objectScene->setPosition(QVector3D(-1.11111,2.11111,-10.11111));
     //
-    //objectScene->setOrientation(QQuaternion(QVector4D(QVector3D(0,0,1),0.269)));
+    //objectScene->setOrientation(QQuaternion(QQuaternion::fromEulerAngles(QVector3D(90,45,0))));
     makePlot();
 
 }
@@ -56,9 +56,9 @@ void MainWindow::addConnections()
 
     connect(objectScene, &Object_Scene::orientationChanged, objectScene, &Object_Scene::setOrientation);
 
-    connect(objectScene, &Object_Scene::positionChanged, objectScene, &Object_Scene::setPosition);
-    connect(device,&Device::orientationChanged,objectScene,&Object_Scene::setOrientation);
-    connect(device,&Device::positionChanged,objectScene,&Object_Scene::setPosition);
+   // connect(objectScene, &Object_Scene::positionChanged, objectScene, &Object_Scene::setPosition);
+    //connect(device,&Device::orientationChanged,objectScene,&Object_Scene::setOrientation);
+    //connect(device,&Device::positionChanged,objectScene,&Object_Scene::setPosition);
 
     connect(device,&Device::sendEncoderDatatoChart,this,&MainWindow::setChartsValue);
     //connect(device,&Device::sendAccDatatoChart,this,&MainWindow::setChartsValue);
@@ -78,13 +78,13 @@ void MainWindow::addConnections()
 
     connect(ui->actionZa_aduj_model, &QAction::triggered,[=]()
     {
-    //QString filter = "Dae File (*.dae) ;; Obj File (*.obj)";
-    //QUrl renderFile =QFileDialog::getOpenFileUrl(this,"Wybierz model formatu .dae",QDir::homePath(),filter);
-    QUrl renderFile =QFileDialog::getOpenFileUrl(this,"Wybierz model formatu .dae",QDir::homePath());
+    QString filter = "Dae File (*.dae) ;; Obj File (*.obj)";
+    QUrl renderFile =QFileDialog::getOpenFileUrl(this,"Wybierz model formatu .dae",QDir::homePath(),filter);
+    //QUrl renderFile =QFileDialog::getOpenFileUrl(this,"Wybierz model formatu .dae",QDir::homePath());
     if(0!=renderFile.toString().length())
     {
         objectScene->setRenderFile(renderFile);
-        on_resetViewButton_clicked();
+        //on_resetViewButton_clicked();
     }
     });
 
@@ -92,8 +92,8 @@ void MainWindow::addConnections()
     connect(ui->actionUsu_model, &QAction::triggered,[=]()
     {
 
-        objectScene->setRenderFile(QUrl(QString("file:C:/Users/john/OneDrive/Pulpit/object1.dae")));
-        on_resetViewButton_clicked();
+        objectScene->setRenderFile(QUrl(QString("file:C:/Users/john/OneDrive/Pulpit/Pierwsze_ramie_inz.obj")));
+        //on_resetViewButton_clicked();
     });
 
     connect(ui->actionZnajd_port,&QAction::triggered, [=]()
@@ -116,7 +116,51 @@ void MainWindow::addConnections()
         }
     });
 
+    connect(ui->actionDodaj_pozycj, &QAction::triggered,[=]()
+    {
+        seqHandler.addSeqPosition(robot->J1_angle,robot->J2_angle,robot->J3_angle);
+        std::ostringstream oss;
+        oss << "Dodaną następującą liczbę pozycji: " << seqHandler.getSize();
 
+        QMessageBox::information(this,"Sekwencja", QString::fromStdString(oss.str()));
+
+    });
+
+    connect(ui->actionWyczy_sekwencj, &QAction::triggered,[=]()
+    {
+        seqHandler.clearSequence();
+
+        QMessageBox::information(this,"Sekwencja", "Sekwencja została usunięta");
+
+    });
+
+    connect(ui->actionStart_2, &QAction::triggered,[=]()
+    {
+
+        for(seqHandler.index = 0; seqHandler.index<seqHandler.getSize(); seqHandler.index++)
+        {
+            std::stringstream msg;
+            auto tuple =  seqHandler.getList()[seqHandler.index];
+            float X, Y, Z;
+            std::tie(X, Y, Z) = tuple;
+
+            robot->fromSlidersToPosition(X,Y,Z);
+
+
+            msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";
+
+            qDebug() << QString::fromStdString(msg.str());
+            emit device->sendingMessage(QString::fromStdString(msg.str()));
+            seqHandler.delay();
+
+        }
+        seqHandler.index = seqHandler.getSize();
+
+    });
+    connect(ui->actionStop_2, &QAction::triggered,[=]()
+    {
+        seqHandler.index = seqHandler.getSize();
+    });
 
 
 }
@@ -164,11 +208,13 @@ void MainWindow::setZTranslationValue(float value)
 }
 
 
-void MainWindow::setRotationValue(float x , float y)
+void MainWindow::setRotationValue(float x , float y, float z)
 {
         setXRotationValue(x);
         setYRotationValue(y);
-        setZRotationValue(0);
+        setZRotationValue(z);
+        objectScene->setOrientation(QQuaternion(QQuaternion::fromEulerAngles(QVector3D(x,y,z))));
+
 }
 
 void MainWindow::setTranslationValue(const QVector3D &value)
@@ -488,63 +534,30 @@ void MainWindow::on_motor2R_released()
 void MainWindow::on_pushButton_5_clicked()
 {
     std::stringstream msg;
-    msg <<"E 0 0 55R";
+    msg <<"E 0 0 0 55R";
     robot = new Robot(0,0,0.0,0.0);
+
+
+    disconnect(robot, &Robot::encoderPositionChanged,this,&MainWindow::setRotationValue);
+    disconnect(robot,&Robot::robotPositionChanged,this,&MainWindow::setTranslationValue);
+    disconnect(device,&Device::newDeviceValues,robot,&Robot::encToDegree);
     connect(device,&Device::newDeviceValues,robot,&Robot::encToDegree);
     connect(robot, &Robot::encoderPositionChanged,this,&MainWindow::setRotationValue);
     connect(robot,&Robot::robotPositionChanged,this,&MainWindow::setTranslationValue);
-
-    connect(ui->actionDodaj_pozycj, &QAction::triggered,[=]()
-    {
-        seqHandler.addSeqPosition(robot->J1_angle,robot->J2_angle,robot->J3_angle);
-        std::ostringstream oss;
-        oss << "Dodaną następującą liczbę pozycji: " << seqHandler.getSize();
-
-        QMessageBox::information(this,"Sekwencja", QString::fromStdString(oss.str()));
-
-    });
-
-    connect(ui->actionWyczy_sekwencj, &QAction::triggered,[=]()
-    {
-        seqHandler.clearSequence();
-
-        QMessageBox::information(this,"Sekwencja", "Sekwencja została usunięta");
-
-    });
-
-    connect(ui->actionStart_2, &QAction::triggered,[=]()
-    {
-        std::stringstream msg;
-        for(seqHandler.index = 0; seqHandler.index<seqHandler.getSize(); seqHandler.index++)
-        {
-            auto tuple =  seqHandler.getList()[seqHandler.index];
-            float X, Y, Z;
-            std::tie(X, Y, Z) = tuple;
-
-            robot->fromSlidersToPosition(X,Y,Z);
+    //connect(robot,&Robot::encoderPositionChanged,objectScene, &Object_Scene::setOrientation);
 
 
-            msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";
-            emit device->sendingMessage(QString::fromStdString(msg.str()));
-
-            seqHandler.delay();
-        }
-        seqHandler.index = seqHandler.getSize();
-
-    });
-    connect(ui->actionStop_2, &QAction::triggered,[=]()
-    {
-        seqHandler.index = seqHandler.getSize();
-    });
 
     emit device->sendingMessage(QString::fromStdString(msg.str()));
+
+    QMessageBox::information(this,"Kalibracja", "Pozycja startowa manipulatora pomyślnie skalibrowana");
 }
 
 void MainWindow::on_positionSetButton_clicked()
 {
     std::stringstream msg;
 
-    robot->fromSpinboxToPosition(spinbox_Data.x(),spinbox_Data.y(),spinbox_Data.z());
+    robot->fromSpinboxToPosition(spinbox_Data.x(),spinbox_Data.y(),spinbox_Data.z(),ui->checkBox->isChecked());
 
     msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";
     qDebug() << QString::fromStdString(msg.str());
@@ -553,8 +566,7 @@ void MainWindow::on_positionSetButton_clicked()
 
 void MainWindow::on_resetViewButton_clicked()
 {
-    objectScene->setOrientation(QQuaternion(QVector4D(QVector3D(0,0,0),0)));
-    objectScene->setPosition(QVector3D(0,0,0));
+
     //device->resetDeviceValues();
     std::stringstream msg;
 

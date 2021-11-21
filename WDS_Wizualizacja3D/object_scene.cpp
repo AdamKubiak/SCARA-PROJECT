@@ -14,7 +14,7 @@
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DExtras/QOrbitCameraController>
 #include <Qt3DExtras/QForwardRenderer>
-
+#include <QFirstPersonCameraController>
 #include <QPushButton>
 #include <QLabel>
 #include <Qt3DExtras/QForwardRenderer>
@@ -40,6 +40,26 @@ Object_Scene::Object_Scene(QWidget *parent)
     // Camera
     cameraEntity = view->camera();
 
+       cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+       cameraEntity->setPosition(QVector3D(0, 20.0f, 60.0f));
+       cameraEntity->setUpVector(QVector3D(0, 1, 0));
+       cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+
+       Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+       Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+       light->setColor("white");
+       light->setIntensity(1);
+       lightEntity->addComponent(light);
+       Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+       lightTransform->setTranslation(cameraEntity->position());
+       lightEntity->addComponent(lightTransform);
+
+       // For camera controls
+       Qt3DExtras::QOrbitCameraController *camController = new Qt3DExtras::QOrbitCameraController(rootEntity);//moje
+       camController->setCamera(cameraEntity);
+
+   /* cameraEntity = view->camera();
+
     // For the Blender model:
         // X+ -> right
         // Y+ -> away
@@ -49,9 +69,9 @@ Object_Scene::Object_Scene(QWidget *parent)
         cameraEntity->setUpVector(QVector3D(0, 0, 1));
         cameraEntity->setViewCenter(QVector3D(0, 0, 0));
     Qt3DExtras::QOrbitCameraController *camController = new Qt3DExtras::QOrbitCameraController(rootEntity);//moje
-    camController->setCamera(cameraEntity);//moje
+    camController->setCamera(cameraEntity);//moje*/
 
-    Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+    /*Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
     Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
     light->setColor("white");
     light->setIntensity(1);
@@ -60,8 +80,8 @@ Object_Scene::Object_Scene(QWidget *parent)
     //lightTransform->setTranslation(cameraEntity->position());
     //lightEntity->addComponent(lightTransform);
     lightTransform->setTranslation(QVector3D(30,-100, -20));
-    lightEntity->addComponent(lightTransform);
-    renderFile = QUrl(QString("file:C:/Users/john/OneDrive/Pulpit/object1.dae"));
+    lightEntity->addComponent(lightTransform);*/
+    renderFile = QUrl(QString("file:C:/Users/john/OneDrive/Pulpit/Podstawa_inz2.obj"));
 
 
     // Set root object of the scene
@@ -76,14 +96,14 @@ Object_Scene::Object_Scene(QWidget *parent)
 
 void Object_Scene::createRenderObject()
 {
-    if(objectEntity)
+   /* if(objectEntity)
     {
         delete objectEntity;
     }
 
-    /*objectEntity = new Render_Object(rootEntity);
+    objectEntity = new Render_Object(rootEntity);
     objectEntity->loader()->setSource(renderFile);
-    objectEntity->transform()->setScale(0.35);*/
+    //objectEntity->transform()->setScale(0.35);//*/
     manip = new Manipulator(rootEntity);
     manip->createManipulator();
 }
@@ -116,17 +136,18 @@ void Object_Scene::setOrientation(const QQuaternion &orientation)
     emit orientationChanged(orientation);
     }*/
 
-    if(this->orientation!=orientation)
-        {
-        this->orientation = orientation;
+    //if(this->orientation!=orientation)
+      //  {
+        //this->orientation = orientation;
 
 
-            QVector3D rot = this->orientation.toEulerAngles();
-            manip->setQ1(rot.x());
-            manip->setQ2(rot.y());
-            manip->setQ3(rot.z());
-            emit orientationChanged(orientation);
-        }
+            QVector3D rot = orientation.toEulerAngles();
+            manip->setQ1((int)rot.x()-90);
+
+            manip->setQ2((int)rot.y());
+          //  manip->setQ3(rot.z());
+            //emit orientationChanged(orientation);
+        //}
 
 
 }

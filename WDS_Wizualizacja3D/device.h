@@ -67,7 +67,7 @@ signals:
     /*!
      * \brief Sygnał wysyłany przy odebraniu i sprawdzeniu poprawności przesyłu danych.
      */
-    void newDeviceValues(int x, int y);
+    void newDeviceValues(int x, int y, int z);
     /*!
      * \brief Sygnał wysyłany po zakończeniu kalibracji żyroskopu.
      */

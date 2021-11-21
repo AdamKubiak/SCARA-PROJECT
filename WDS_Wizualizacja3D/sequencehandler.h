@@ -17,9 +17,9 @@ public:
     std::vector<std::tuple<float, float,float>> getList();
     void delay()
     {
-        QTime dieTime= QTime::currentTime().addSecs(2);
+        QTime dieTime= QTime::currentTime().addSecs(4);
         while (QTime::currentTime() < dieTime)
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 4000);
     }
     int index;
 };

@@ -541,6 +541,9 @@
         </item>
         <item row="3" column="2">
          <widget class="QSlider" name="horizontalSlider_3">
+          <property name="maximum">
+           <number>180</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -553,37 +556,6 @@
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <layout class="QGridLayout" name="gridLayout_8">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="minimumSize">
-              <size>
-               <width>88</width>
-               <height>21</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Współrzędna osi X[cm]</string>
-             </property>
-             <property name="scaledContents">
-              <bool>false</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0" colspan="3">
-            <widget class="QPushButton" name="positionSetButton">
-             <property name="text">
-              <string>Wykonaj ruch do zadanej pozycji</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="1">
             <widget class="QLabel" name="label_7">
              <property name="font">
@@ -615,13 +587,59 @@
             </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QDoubleSpinBox" name="Z_SpinBox"/>
+            <widget class="QDoubleSpinBox" name="Z_SpinBox">
+             <property name="maximum">
+              <double>4.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QDoubleSpinBox" name="X_SpinBox"/>
+            <widget class="QDoubleSpinBox" name="X_SpinBox">
+             <property name="minimum">
+              <double>-99.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="minimumSize">
+              <size>
+               <width>88</width>
+               <height>21</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Współrzędna osi X[cm]</string>
+             </property>
+             <property name="scaledContents">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
            </item>
            <item row="1" column="1">
             <widget class="QDoubleSpinBox" name="Y_SpinBox"/>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <widget class="QPushButton" name="positionSetButton">
+             <property name="text">
+              <string>Wykonaj ruch do zadanej pozycji</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="text">
+              <string>Tryb</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

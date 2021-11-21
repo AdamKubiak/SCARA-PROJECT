@@ -79,7 +79,7 @@ public slots:
      *  dla każdej z osi i następuje przekazanie tych wartości do GUI.
      *  \param[in] value - wartość rotacji obiektu w quaternionach.
      */
-    void setRotationValue(float x , float y);
+    void setRotationValue(float x , float y,float z);
 
     /*!
      * \brief Slot przyjmuje strukture QVector3D, który zostaje rozbity na wartości translacji

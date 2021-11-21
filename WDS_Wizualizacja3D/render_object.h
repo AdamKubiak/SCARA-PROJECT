@@ -45,7 +45,7 @@ public:
      * \brief Metoda zwraca pole local_material.
      * \return pole typu QMaterial.
      */
-    Qt3DRender::QMaterial *material();
+    Qt3DExtras::QPhongMaterial *material();
     /*!
      * \brief Metoda zwraca pole local_torusMesh.
      * \return pole typu QTorusMesh.
@@ -73,7 +73,7 @@ private:
     Qt3DExtras::QDiffuseSpecularMapMaterial *local_map;
     Qt3DCore::QTransform *local_transform; //!< transformacja obiektu.
     Qt3DRender::QTextureImage *local_texture;
-    Qt3DRender::QMaterial *local_material;
+    Qt3DExtras::QPhongMaterial *local_material;
     Qt3DExtras::QTorusMesh *local_torusMesh;
     Qt3DRender::QMesh *local_mesh;
     Qt3DRender::QSceneLoader *local_loader; //!< zawiera zaladowany obiekt 3D z pliku.

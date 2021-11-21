@@ -12,6 +12,7 @@
 #include <QTransform>
 #include <Qt3DCore/QEntity>
 #include <memory>
+#include <render_object.h>
 
 /*!
  * \class Manipulator
@@ -57,24 +58,11 @@ private:
 
     Qt3DCore::QEntity* sceneRoot; //!< Pointer to parent 3D scene entity
 
-    Qt3DExtras::QCylinderMesh* baseMesh;  //!< Mesh for base of manipulator
-    Qt3DExtras::QCylinderMesh* baseMesh1;  //!< Mesh for base of manipulator
-    Qt3DExtras::QCuboidMesh* link1Mesh;    //!< Mesh for first link of manipulator
-    Qt3DExtras::QCuboidMesh* link2Mesh;    //!< Mesh for second link of manipulator
-    Qt3DExtras::QCuboidMesh* link3Mesh;    //!< Mesh for third link of manipulator
+    Render_Object* Base;
+    Render_Object* Link1;
+    Render_Object* Link2;
+    QUrl renderFile;
 
-    Qt3DCore::QEntity* base;    //!< Base entity
-    Qt3DCore::QEntity* base1;   //!< Base entity
-    Qt3DCore::QEntity* link1;  //!< First link entity
-    Qt3DCore::QEntity* link2;  //!< Second link entity
-    Qt3DCore::QEntity* link3;  //!< Third link entity
-
-    Qt3DCore::QTransform* base1Transform;
-    Qt3DCore::QTransform* link1Transform;  //!< Transform object for first link
-    Qt3DCore::QTransform* link2Transform;  //!< Transform object for second link
-    Qt3DCore::QTransform* link3Transform;  //!< Transform object for third link
-
-    QMatrix4x4 base1Matrix;
     QMatrix4x4 link1Matrix;    //!< Rotation matrix for first link
     QMatrix4x4 link2Matrix;    //!< Rotation matrix for second link
     QMatrix4x4 link3Matrix;    //!< Rotation matrix for third link
