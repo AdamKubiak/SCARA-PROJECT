@@ -494,6 +494,9 @@
           <property name="maximum">
            <number>130</number>
           </property>
+          <property name="pageStep">
+           <number>1</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -506,6 +509,9 @@
           </property>
           <property name="maximum">
            <number>190</number>
+          </property>
+          <property name="pageStep">
+           <number>1</number>
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -543,6 +549,9 @@
          <widget class="QSlider" name="horizontalSlider_3">
           <property name="maximum">
            <number>180</number>
+          </property>
+          <property name="pageStep">
+           <number>1</number>
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -707,9 +716,17 @@
     <addaction name="actionStart_2"/>
     <addaction name="actionStop_2"/>
    </widget>
+   <widget class="QMenu" name="menuRysowanie">
+    <property name="title">
+     <string>Rysowanie</string>
+    </property>
+    <addaction name="actionNarysuj_linie"/>
+    <addaction name="actionNarysuj_kolo"/>
+   </widget>
    <addaction name="menuPlik"/>
    <addaction name="menuKomunikacja"/>
    <addaction name="menuSekwencja"/>
+   <addaction name="menuRysowanie"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionUsu_model">
@@ -765,6 +782,16 @@
   <action name="actionStop_2">
    <property name="text">
     <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionNarysuj_linie">
+   <property name="text">
+    <string>Narysuj linie</string>
+   </property>
+  </action>
+  <action name="actionNarysuj_kolo">
+   <property name="text">
+    <string>Narysuj koło</string>
    </property>
   </action>
  </widget>

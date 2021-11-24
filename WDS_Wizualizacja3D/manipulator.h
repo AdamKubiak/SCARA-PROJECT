@@ -42,12 +42,12 @@ public slots:
      * \brief Set Q1 - angle in first joint
      * \param val - angle in degrees
      */
-    void setQ1(int val);
+    void setQ1(float val);
     /*!
      * \brief Set Q1 - angle in second joint
      * \param val - angle in degrees
      */
-    void setQ2(int val);
+    void setQ2(float val);
     /*!
      * \brief Set Q1 - angle in second joint
      * \param val - angle in degrees
@@ -67,8 +67,8 @@ private:
     QMatrix4x4 link2Matrix;    //!< Rotation matrix for second link
     QMatrix4x4 link3Matrix;    //!< Rotation matrix for third link
 
-    int q1Rotation; //!< Angle in first joint
-    int q2Rotation; //!< Angle in second joint
+    float q1Rotation; //!< Angle in first joint
+    float q2Rotation; //!< Angle in second joint
     int q3Rotation; //!< Angle in third joint
 
 };

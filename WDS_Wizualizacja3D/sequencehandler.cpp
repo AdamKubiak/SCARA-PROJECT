@@ -24,3 +24,6 @@ std::vector<std::tuple<float, float,float>> SequenceHandler::getList()
 {
     return this->positions;
 }
+
+
+

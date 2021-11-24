@@ -57,7 +57,7 @@ public slots:
      * \brief Slot zmienia orientacje obiektu na podstawie otrzymanych danych.
      *  \param[in]  orientation - zmienna typu QQuaternion z wartościami rotacji obiektu 3D.
      */
-    void setOrientation(const QQuaternion &orientation);
+    void setOrientation(float x,float y,float z);
 
     /*!
      * \brief Slot zmienia pozycje obiektu na podstawie otrzymanych danych.
@@ -71,7 +71,7 @@ signals:
      * \brief Sygnał jest emitowany gdy orientacja obiektu ulega zmianie.
      * \param[in]QQuaternion - aktualna pozycja obiektu typu QQuaternion.
      */
-    void orientationChanged(const QQuaternion&);
+    void orientationChanged(float x,float y,float z);
 
 
     /*!

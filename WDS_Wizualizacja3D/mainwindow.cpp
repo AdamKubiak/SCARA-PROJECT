@@ -5,6 +5,51 @@
 #include <QDir>
 #include <sstream>
 
+float calcFcn(QVector3D params, float x)
+{
+    float y = (-params.x() * x + params.z()) / params.y();
+
+    return y;
+}
+
+
+QVector3D lineFromPoints(std::pair<float,float> P, std::pair<float,float> Q)
+{
+    float a = Q.second - P.second;
+    float b = P.first - Q.first;
+    float c = a * (P.first) + b * (P.second);
+
+    return QVector3D(a,b,c);
+
+}
+
+std::vector<float> circle_equation(float x1, float y1, float r)
+{
+    std::vector<float> abc;
+    float a = -2 * x1;
+
+    float b = -2 * y1;
+
+    float c = (r * r) - (x1 * x1) - (y1 * y1);
+
+    abc.push_back(a);
+    abc.push_back(b);
+    abc.push_back(c);
+
+    return abc;
+}
+
+std::pair<float, float> quadradicEq(float x,std::vector<float> abc)
+{
+    abc[2] = (-abc[2] + (x * x) + abc[0] * x);
+
+    float delta = abc[1] * abc[1] - 4 * abc[2];
+    float X1 = (-abc[1] - sqrt(delta)) / 2;
+    float X2 = (-abc[1] + sqrt(delta)) / 2;
+    std::pair<float, float> essa = std::make_pair(X1, X2);
+    return  essa;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -23,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //objectScene->setPosition(QVector3D(-1.11111,2.11111,-10.11111));
     //
-    //objectScene->setOrientation(QQuaternion(QQuaternion::fromEulerAngles(QVector3D(90,45,0))));
+    //objectScene->setOrientation(QQuaternion(QQuaternion::fromEulerAngles(QVector3D(110.0,0,0))));
     makePlot();
 
 }
@@ -53,6 +98,7 @@ void MainWindow::addConnections()
     //connect(objectScene, &Object_Scene::orientationChanged,this, &MainWindow::setRotationValue);
 
     //connect(objectScene, &Object_Scene::positionChanged, this, &MainWindow::setTranslationValue);
+
 
     connect(objectScene, &Object_Scene::orientationChanged, objectScene, &Object_Scene::setOrientation);
 
@@ -119,6 +165,7 @@ void MainWindow::addConnections()
     connect(ui->actionDodaj_pozycj, &QAction::triggered,[=]()
     {
         seqHandler.addSeqPosition(robot->J1_angle,robot->J2_angle,robot->J3_angle);
+        seqHandlerDraw.addSeqPosition(robot->position.x(),robot->position.y(),robot->position.z());
         std::ostringstream oss;
         oss << "Dodaną następującą liczbę pozycji: " << seqHandler.getSize();
 
@@ -129,6 +176,7 @@ void MainWindow::addConnections()
     connect(ui->actionWyczy_sekwencj, &QAction::triggered,[=]()
     {
         seqHandler.clearSequence();
+        seqHandlerDraw.clearSequence();
 
         QMessageBox::information(this,"Sekwencja", "Sekwencja została usunięta");
 
@@ -157,9 +205,112 @@ void MainWindow::addConnections()
         seqHandler.index = seqHandler.getSize();
 
     });
+
+
     connect(ui->actionStop_2, &QAction::triggered,[=]()
     {
         seqHandler.index = seqHandler.getSize();
+    });
+
+    connect(ui->actionNarysuj_linie, &QAction::triggered,[=]()
+    {
+        float X1, Y1, X2, Y2,Z;
+        std::stringstream msg;
+        QVector3D params;
+        if(seqHandlerDraw.getSize() == 2)
+        {
+            auto tuple =  seqHandlerDraw.getList()[0];
+            std::tie(X1, Y1, Z) = tuple;
+            //qDebug() << X1<<Y1;
+            tuple =  seqHandlerDraw.getList()[1];
+            std::tie(X2, Y2, Z) = tuple;
+            //qDebug() << X2<<Y2;
+
+            params = lineFromPoints(std::make_pair(X1,Y1), std::make_pair(X2,Y2));
+            //qDebug() << params[0]<<params[1]<<params[2];
+
+            if(X1<X2)
+            {
+                while(X1<X2)
+                {
+
+                    robot->fromSpinboxToPosition(X1,calcFcn(params,X1),Z,ui->checkBox->isChecked());
+                    X1 = X1+0.25;
+                    msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";//msg <<"I "<<sliders_Data.getX() << " 4.41 5.45 55R";
+                    qDebug() << QString::fromStdString(msg.str());
+                    emit device->sendingMessage(QString::fromStdString(msg.str()));
+                    msg.str(std::string());
+                    QTime dieTime= QTime::currentTime().addMSecs(10);
+                    while (QTime::currentTime() < dieTime)
+                    QCoreApplication::processEvents(QEventLoop::AllEvents, 3000);
+
+                }
+            }
+        }
+    });
+
+    connect(ui->actionNarysuj_kolo, &QAction::triggered,[=]()
+    {
+        float X1, Y1, X2, Y2,Z;
+        Z= 4.0;
+        float r = 4.0;
+
+        std::stringstream msg;
+        std::vector<float> X_list;
+        std::vector<std::pair<float,float>> wyniki;
+        if(seqHandlerDraw.getSize() == 1)
+        {
+            auto tuple =  seqHandlerDraw.getList()[0];
+            std::tie(X1, Y1, Z) = tuple;
+            std::vector<float> abc = circle_equation(X1, Y1, r);
+
+            float Xmin = X1-r;
+            float Xmax = X1+r;
+
+            while(Xmin <= Xmax)
+            {
+                wyniki.push_back(quadradicEq(Xmin,abc));
+                X_list.push_back(Xmin);
+                Xmin = Xmin + 0.25;
+               /* if(Xmin>Xmax){
+
+                    Xmin = Xmax;
+                    wyniki.push_back(quadradicEq(Xmin,abc));
+                    X_list.push_back(Xmin);
+                }*/
+            }
+
+
+            for(unsigned int i = 0; i<wyniki.size(); i++)
+            {
+                robot->fromSpinboxToPosition(X_list[i],wyniki[i].first,Z,ui->checkBox->isChecked());
+                msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";//msg <<"I "<<sliders_Data.getX() << " 4.41 5.45 55R";
+                qDebug() << QString::fromStdString(msg.str());
+                emit device->sendingMessage(QString::fromStdString(msg.str()));
+                msg.str(std::string());
+                QTime dieTime= QTime::currentTime().addMSecs(10);
+                while (QTime::currentTime() < dieTime)
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 3000);
+
+            }
+
+            for(unsigned int i = wyniki.size()-1; i>0; i--)
+            {
+                qDebug()<<i;
+                robot->fromSpinboxToPosition(X_list[i],wyniki[i].second,Z,ui->checkBox->isChecked());
+                msg <<"I "<<(int)robot->setpoint_J1_angle << " " << (int)robot->setpoint_J2_angle << " "<< (int)robot->setpoint_J3_angle << " 55R";//msg <<"I "<<sliders_Data.getX() << " 4.41 5.45 55R";
+                qDebug() << QString::fromStdString(msg.str());
+                emit device->sendingMessage(QString::fromStdString(msg.str()));
+                msg.str(std::string());
+                QTime dieTime= QTime::currentTime().addMSecs(10);
+                while (QTime::currentTime() < dieTime)
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 3000);
+
+            }
+
+
+
+        }
     });
 
 
@@ -213,7 +364,9 @@ void MainWindow::setRotationValue(float x , float y, float z)
         setXRotationValue(x);
         setYRotationValue(y);
         setZRotationValue(z);
-        objectScene->setOrientation(QQuaternion(QQuaternion::fromEulerAngles(QVector3D(x,y,z))));
+
+
+        objectScene->setOrientation(x,y,z);
 
 }
 

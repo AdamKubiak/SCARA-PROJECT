@@ -151,6 +151,7 @@ private:
     QVector3D spinbox_Data;
     Robot *robot;
     SequenceHandler seqHandler;
+    SequenceHandler seqHandlerDraw;
 
     QVector<double>    Xgyro_y,Ygyro_y,Zgyro_y, dtTime; //!< wektory z danymi z żyroskopu do wyświetlenia na wykresach.
     QVector<double>    Xacc_y,Yacc_y,Zacc_y; //!< wektory z danymi z akcelerometru do wyświetlenia na wykresach.

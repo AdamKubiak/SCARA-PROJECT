@@ -19,7 +19,7 @@ public:
     {
         QTime dieTime= QTime::currentTime().addSecs(4);
         while (QTime::currentTime() < dieTime)
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 4000);
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 3000);
     }
     int index;
 };

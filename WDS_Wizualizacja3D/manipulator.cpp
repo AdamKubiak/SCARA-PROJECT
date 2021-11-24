@@ -55,7 +55,7 @@ void Manipulator::createManipulator()
     q2Rotation = 0;
     //q3Rotation = 90;
 
-   setQ1(-90);
+   setQ1(0);
    setQ2(0);
    //setQ3(-5);
 
@@ -64,11 +64,14 @@ void Manipulator::createManipulator()
 }
 
 
-void Manipulator::setQ1(int val)
+void Manipulator::setQ1(float val)
 {
-    static int previousQ = 0;
+    static float previousQ = 0;
+
     q1Rotation = val;
+
     link1Matrix.rotate(q1Rotation-previousQ, 0,1,0);
+    //Link1->transform()->matrix();
     Link1->transform()->setMatrix(link1Matrix);
 
     link2Matrix=link1Matrix;
@@ -80,7 +83,7 @@ void Manipulator::setQ1(int val)
     previousQ = q1Rotation;
 }
 
-void Manipulator::setQ2(int val)
+void Manipulator::setQ2(float val)
 {
     static int previousQ = 0;
     q2Rotation = val;

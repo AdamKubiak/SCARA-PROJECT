@@ -125,7 +125,7 @@ Render_Object *Object_Scene::get_RenderObject()
     return objectEntity;
 }
 
-void Object_Scene::setOrientation(const QQuaternion &orientation)
+void Object_Scene::setOrientation(float x,float y,float z)
 {
     /*if(this->orientation!=orientation)
     {
@@ -141,10 +141,12 @@ void Object_Scene::setOrientation(const QQuaternion &orientation)
         //this->orientation = orientation;
 
 
-            QVector3D rot = orientation.toEulerAngles();
-            manip->setQ1((int)rot.x()-90);
+           // QVector3D rot = orientation.toEulerAngles();
 
-            manip->setQ2((int)rot.y());
+            manip->setQ1(x-90.0);
+
+            manip->setQ2(y);
+            //qDebug()<<"X: "<< rot.x() <<" "<< rot.y();
           //  manip->setQ3(rot.z());
             //emit orientationChanged(orientation);
         //}
