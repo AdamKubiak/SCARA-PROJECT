@@ -1,6 +1,6 @@
 # SCARA-PROJECT
 # SCARA(GNIOBOT) - DIY manipulator o trzech stopniach swobody typu SCARA :robot:
-![](docs/img/KONSTRUKCJA3.jpg
+![](docs/img/KONSTRUKCJA3.jpg)
 
 # Aplikacja okienkowa QT
 ## Aplikacja pozwala na:
