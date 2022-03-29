@@ -11,8 +11,10 @@
 - [X] Wyprowadzenie modelu kinematyki prostej i odwrotnej dla robota typu SCARA
 - [X] Wykonanie programu sterującego na mikrokontroler STM32
 - [X] Stworzenie aplikacji okienkowej umożliwiającej sterowanie i obserwację położenia robota
-#
+
 ![](docs/img/SCARAGIF.gif)
+![](docs/img/linedraw.gif)
+![](docs/img/circledraw.gif)
 
 # Aplikacja okienkowa QT
 ## Aplikacja pozwala na:
