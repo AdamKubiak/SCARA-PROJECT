@@ -13,7 +13,7 @@
 - [X] Stworzenie aplikacji okienkowej umożliwiającej sterowanie i obserwację położenia robota
 
 ![](docs/img/SCARAGIF.gif)
-#Rysowanie
+# Rysowanie
 ![](docs/img/linedraw.gif)
 ![](docs/img/circledraw.gif)
 
