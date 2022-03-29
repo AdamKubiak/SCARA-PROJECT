@@ -10,10 +10,11 @@
 - [X] Zaprojektowanie i wykonanie elektroniki niezbędnej do zasilania i sterowania podzespołów
 - [X] Wyprowadzenie modelu kinematyki prostej i odwrotnej dla robota typu SCARA
 - [X] Wykonanie programu sterującego na mikrokontroler STM32
+- [X] Zaprogramowanie i dostrojenie kontrolera PID odpowiedzialnego za sterowanie silnikami DC
 - [X] Stworzenie aplikacji okienkowej umożliwiającej sterowanie i obserwację położenia robota
-
+## Sekwencja ruchów
 ![](docs/img/SCARAGIF.gif)
-# Rysowanie
+## Rysowanie
 ![](docs/img/linedraw.gif)
 ![](docs/img/circledraw.gif)
 
@@ -28,15 +29,16 @@
 
 ![](docs/img/viewAPP.jpg)
 
-Oprogramowanie aplikacji sterującej robotem zostało opartę na moim poprzednim projekcie
+## Diagram UML
+![](docs/img/uml_diagram.jpg)
+
+Oprogramowanie aplikacji sterującej robotem zostało oparte i rozbudowane na podstawie mojego poprzedniego projektu:
 https://github.com/AdamKubiak/WDS_Qt3D
 
-## Features
-- [X] DIY energy pack
-- [X] WiFi connection
-- [X] PID motor power controler
-- [X] RoboVision integration
-- [X] Circuit board design
-- [X] Chassis design
+# Model 3D
+Model robota został stworzony w oprogramowaniu Autodesk Inventor.
+![](docs/img/inventorview1.jpg)
 
-## PCB
+# Elektronika
+W celu zmniejszenia kosztów elektronika została wykonana na płytce prototypowej, a połaczenia układu zostały wykonane za pomocą kabli. 
+![](docs/img/schematic.png)
